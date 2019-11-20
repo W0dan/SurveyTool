@@ -1,0 +1,15 @@
+﻿@model SurveyTool.Web.Views.Survey.SurveyModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@Model.Survey.Name</h1>
+
+<p class="text-center">
+    @Html.Raw(Model.Survey.Description.Replace("\n", "<br />\n"))
+</p>
+
+<form method="post" action="/survey/create/@Model.Survey.Id" class="text-center">
+    <input type="submit" value="Start enquête" />
+</form>

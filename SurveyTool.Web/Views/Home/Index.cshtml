@@ -1,0 +1,13 @@
+﻿@model SurveyTool.Web.Views.Home.HomeViewModel
+
+<div class="text-center">
+    <h1 class="display-4">Overview</h1>
+</div>
+
+<h3>Beschikbare enquêtes</h3>
+<div class="survey-list">
+    @foreach (var s in Model.Surveys)
+    {
+        <div class="survey-list-item"><a href="@Url.Action("index", "survey", new { id=s.Id })">@s.Name</a></div>
+    }
+</div>
