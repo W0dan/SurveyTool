@@ -8,5 +8,7 @@ namespace SurveyTool.EntityFramework
         public Guid Id { get; internal set; }
         public ICollection<QuestionPartAnswer> QuestionPartAnswers { get; set; }
         public Question Question { get; internal set; }
+        public string AnswerText { get; set; }
+        public SurveyAnswer SurveyAnswer { get; internal set; }
     }
 }

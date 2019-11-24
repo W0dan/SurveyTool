@@ -2,5 +2,7 @@
 {
     public enum QuestionType
     {
+        Text = 1,
+
     }
 }
