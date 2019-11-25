@@ -5,13 +5,18 @@
 
 <h1>@Model.Title</h1>
 
-@foreach(var question in Model.Page.Questions)
+@{ 
+    var questions = Model.Questions.ToList();
+}
+@for (var i = 0; i < questions.Count(); i++)
 {
     // todo: find generic way to show different kinds of questions
+    var question = questions[i];
 
- <h3>@question.Title</h3>
+    <h3>@question.Title</h3>
 
- <p>
-     @question.AnswerText
- </p>
+    <p>
+        @* todo: howto make using extensions less cumbersome in razor core *@
+        @SurveyTool.Web.Extensions.HtmlHelperExtensions.Question(Html).Text(m => m.Questions[i].AnswerText)
+    </p>
 }
