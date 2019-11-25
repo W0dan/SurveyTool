@@ -43,7 +43,8 @@ namespace SurveyTool.EntityFramework
                 .ToTable("Question")
                 .HasKey(x => x.Id);
             modelBuilder.Entity<Question>()
-                .HasMany(x => x.Parts);
+                .HasMany(x => x.Parts)
+                .WithOne(x => x.Question);
 
             modelBuilder.Entity<QuestionPart>()
                 .ToTable("QuestionPart")
@@ -63,13 +64,15 @@ namespace SurveyTool.EntityFramework
                 .HasOne(x => x.Question)
                 .WithMany(x => x.Answers);
             modelBuilder.Entity<QuestionAnswer>()
-                .HasMany(x => x.QuestionPartAnswers);
+                .HasMany(x => x.QuestionPartAnswers)
+                .WithOne(x => x.QuestionAnswer);
 
             modelBuilder.Entity<QuestionPartAnswer>()
                 .ToTable("QuestionPartAnswer")
                 .HasKey(x => x.Id);
             modelBuilder.Entity<QuestionPartAnswer>()
-                .HasOne(x => x.QuestionPart);
+                .HasOne(x => x.QuestionPart)
+                .WithMany(x => x.QuestionPartAnswers);
         }
     }
 }
