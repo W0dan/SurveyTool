@@ -2,9 +2,9 @@
 
 namespace SurveyTool.Core.GetSurveyAnswerPage
 {
-    internal class QuestionAnswerDto
+    public class QuestionAnswerDto
     {
-        public Guid Id { get; internal set; }
+        public Guid AnswerId { get; internal set; }
         public string Text { get; internal set; }
     }
 }

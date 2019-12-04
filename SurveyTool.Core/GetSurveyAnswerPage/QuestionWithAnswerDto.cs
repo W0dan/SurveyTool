@@ -6,11 +6,11 @@ namespace SurveyTool.Core.GetSurveyAnswerPage
 {
     public class QuestionWithAnswerDto
     {
-        public Guid Id { get; internal set; }
+        public Guid QuestionId { get; internal set; }
         public string Title { get; internal set; }
-        public string AnswerText { get; internal set; }
-        public Guid? AnswerId { get; internal set; }
-        internal IEnumerable<QuestionPartWithAnswerDto> QuestionParts { get; set; }
-        internal QuestionAnswerDto Answer { get; set; }
+        //public string AnswerText { get; internal set; }
+        //public Guid? AnswerId { get; internal set; }
+        public IEnumerable<QuestionPartWithAnswerDto> QuestionParts { get; internal set; }
+        public QuestionAnswerDto Answer { get; internal set; }
     }
 }

@@ -28,20 +28,20 @@ namespace SurveyTool.Core.GetSurveyAnswerPage
                        PageNumber = page.PageNumber,
                        Questions = page.Questions.Select(question => new QuestionWithAnswerDto
                        {
-                           Id = question.Id,
+                           QuestionId = question.Id,
                            Title = question.Title,
                            Answer = question.Answers.Where(answer => answer.SurveyAnswer.Id == surveyAnswerId).Select(answer => new QuestionAnswerDto
                            {
-                               Id = answer.Id,
+                               AnswerId = answer.Id,
                                Text = answer.AnswerText
                            }).FirstOrDefault(),
                            QuestionParts = question.Parts.Select(part => new QuestionPartWithAnswerDto
                            {
-                               Id = part.Id,
+                               QuestionPartId = part.Id,
                                Text = part.Text,
                                Answer = part.QuestionPartAnswers.Where(answer => answer.QuestionAnswer.SurveyAnswer.Id == surveyAnswerId).Select(answer => new QuestionPartAnswerDto
                                {
-                                   Id = answer.Id,
+                                   QuestionPartAnswerId = answer.Id,
                                    Text = answer.Text
                                }).FirstOrDefault()
                            })
