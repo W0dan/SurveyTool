@@ -31,5 +31,12 @@ namespace SurveyTool.Web.Extensions
             ////result.WriteTo()
             //return result;
         }
+
+        public IHtmlContent MultipleChoiceSingleSelect<TResult>(Expression<Func<TModel, TResult>> expression)
+        {
+
+            return new HtmlString("");
+        }
+
     }
 }

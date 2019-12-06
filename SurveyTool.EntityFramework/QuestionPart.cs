@@ -7,6 +7,7 @@ namespace SurveyTool.EntityFramework
     {
         public Guid Id { get; internal set; }
         public QuestionPartType Type { get; set; }
+        public int Order { get; set; }
         public string Text { get; set; }
         public Question Question { get; internal set; }
         public ICollection<QuestionPartAnswer> QuestionPartAnswers { get; internal set; }

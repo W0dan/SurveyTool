@@ -53,7 +53,10 @@ namespace SurveyTool.Web.Views.SurveyAnswer
         {
             var response = requestDispatcher.Dispatch<GetSurveyAnswerPageRequest, GetSurveyAnswerPageResponse>(new GetSurveyAnswerPageRequest { SurveyAnswerId = surveyAnswerId, PageNumber = pageNr });
 
-            return View("Index", new SurveyAnswerModel { Title = "Answer Survey", PageNumber = response.Page.PageNumber, Questions = response.Page.Questions.ToList(), Id = surveyAnswerId });
+            if (response.Page != null)
+                return View("Index", new SurveyAnswerModel { Title = "Answer Survey", PageNumber = response.Page.PageNumber, Questions = response.Page.Questions.ToList(), Id = surveyAnswerId });
+            else
+                return View("LastPage", new ViewModelBase { Title = "Bedankt !" });
         }
     }
 }

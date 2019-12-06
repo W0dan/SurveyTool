@@ -19,12 +19,27 @@
     {
         // todo: find generic way to show different kinds of questions
         var question = questions[i];
+        var parts = questions[i].QuestionParts.ToList();
 
         <h3>@question.Title</h3>
 
         <p>
             @Html.HiddenFor(m => m.Questions[i].QuestionId)
-            @Html.Question().Text(m => m.Questions[i].Answer.Text)
+            @if (question.Type == SurveyTool.EntityFramework.QuestionType.Text)
+            {
+                @Html.TextBoxFor(m => m.Questions[i].Answer.Text)
+            }
+            else if (question.Type == SurveyTool.EntityFramework.QuestionType.MultipleChoiceSingleSelect)
+            {
+            <fieldset id="q_@(question.QuestionId)">
+                @for (var j = 0; j < parts.Count(); j++)
+                {
+                    var part = parts[j];
+
+                    <input type="radio" name="q_@(question.QuestionId)" id="q_@(question.QuestionId)_@(part.QuestionPartId)" value="" /> @part.Text<br />
+                }
+            </fieldset>
+            }
         </p>
     }
 

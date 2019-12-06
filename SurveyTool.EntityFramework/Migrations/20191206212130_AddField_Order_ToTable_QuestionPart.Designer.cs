@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SurveyTool.EntityFramework;
 
 namespace SurveyTool.EntityFramework.Migrations
 {
     [DbContext(typeof(SurveyToolContext))]
-    partial class SurveyToolContextModelSnapshot : ModelSnapshot
+    [Migration("20191206212130_AddField_Order_ToTable_QuestionPart")]
+    partial class AddField_Order_ToTable_QuestionPart
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

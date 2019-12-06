@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using SurveyTool.EntityFramework;
 
 namespace SurveyTool.Core.GetSurveyAnswerPage
 {
@@ -8,9 +9,8 @@ namespace SurveyTool.Core.GetSurveyAnswerPage
     {
         public Guid QuestionId { get; internal set; }
         public string Title { get; internal set; }
-        //public string AnswerText { get; internal set; }
-        //public Guid? AnswerId { get; internal set; }
         public IEnumerable<QuestionPartWithAnswerDto> QuestionParts { get; internal set; }
         public QuestionAnswerDto Answer { get; internal set; }
+        public QuestionType Type { get; internal set; }
     }
 }

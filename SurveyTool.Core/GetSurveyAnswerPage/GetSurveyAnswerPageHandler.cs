@@ -26,19 +26,21 @@ namespace SurveyTool.Core.GetSurveyAnswerPage
                    .Select(page => new PageWithQuestionsAndAnswersDto
                    {
                        PageNumber = page.PageNumber,
-                       Questions = page.Questions.Select(question => new QuestionWithAnswerDto
+                       Questions = page.Questions.OrderBy(x => x.Order).Select(question => new QuestionWithAnswerDto
                        {
                            QuestionId = question.Id,
                            Title = question.Title,
+                           Type = question.Type,
                            Answer = question.Answers.Where(answer => answer.SurveyAnswer.Id == surveyAnswerId).Select(answer => new QuestionAnswerDto
                            {
                                AnswerId = answer.Id,
                                Text = answer.AnswerText
                            }).FirstOrDefault(),
-                           QuestionParts = question.Parts.Select(part => new QuestionPartWithAnswerDto
+                           QuestionParts = question.Parts.OrderBy(x => x.Order).Select(part => new QuestionPartWithAnswerDto
                            {
                                QuestionPartId = part.Id,
                                Text = part.Text,
+                               Type = part.Type,
                                Answer = part.QuestionPartAnswers.Where(answer => answer.QuestionAnswer.SurveyAnswer.Id == surveyAnswerId).Select(answer => new QuestionPartAnswerDto
                                {
                                    QuestionPartAnswerId = answer.Id,
@@ -48,7 +50,7 @@ namespace SurveyTool.Core.GetSurveyAnswerPage
                        })
                    })
                 })
-                .Single().Pages.Single();
+                .SingleOrDefault()?.Pages?.SingleOrDefault();
 
             return new GetSurveyAnswerPageResponse
             {
