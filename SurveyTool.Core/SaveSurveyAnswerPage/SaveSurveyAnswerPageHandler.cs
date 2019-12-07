@@ -1,4 +1,5 @@
-﻿using SurveyTool.EntityFramework;
+﻿using Microsoft.EntityFrameworkCore;
+using SurveyTool.EntityFramework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,12 +20,17 @@ namespace SurveyTool.Core.SaveSurveyAnswerPage
             var surveyAnswer = dbContext.SurveyAnswers.Single(x => x.Id == command.Id);
 
             var questionAnswers = dbContext.QuestionAnswers
+                .Include(a => a.QuestionPartAnswers)
                 .Where(a => a.SurveyAnswer.Id == command.Id && a.Question.SurveyPage.PageNumber == command.PageNumber)
                 .ToList();
 
             // first remove current answers for this page
             foreach (var answer in questionAnswers)
             {
+                foreach (var answerPart in answer.QuestionPartAnswers)
+                {
+                    dbContext.QuestionPartAnswers.Remove(answerPart);
+                }
                 dbContext.QuestionAnswers.Remove(answer);
             }
             dbContext.SaveChanges();
@@ -42,17 +48,22 @@ namespace SurveyTool.Core.SaveSurveyAnswerPage
                 };
                 dbContext.QuestionAnswers.Add(questionAnswer);
 
-                //foreach (var questionPartWithAnswerDto in questionWithAnswerDto.QuestionParts)
-                //{
-                //    var questionPart = dbContext.QuestionParts.Single(x => x.Id == questionPartWithAnswerDto.Id);
-                //    var answerPart = new QuestionPartAnswer
-                //    {
-                //        Id = Guid.NewGuid(),
-                //        Text = questionPartWithAnswerDto.Answer.Text,
-                //        QuestionAnswer = questionAnswer,
-                //    };
-                //    dbContext.QuestionPartAnswers.Add(answerPart);
-                //}
+                // insert the answer parts if any
+                if (questionWithAnswerDto.Answer.Parts != null)
+                {
+                    foreach (var questionPartId in questionWithAnswerDto.Answer.Parts)
+                    {
+                        var questionPart = dbContext.QuestionParts.Single(x => x.Id == questionPartId);
+                        var answerPart = new QuestionPartAnswer
+                        {
+                            Id = Guid.NewGuid(),
+                            Text = questionWithAnswerDto.Answer.Text, // obsolete ? text on questionAnswer maybe enough ?
+                            QuestionAnswer = questionAnswer,
+                            QuestionPart = questionPart
+                        };
+                        dbContext.QuestionPartAnswers.Add(answerPart);
+                    }
+                }
             }
             dbContext.SaveChanges();
 

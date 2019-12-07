@@ -43,7 +43,7 @@ namespace SurveyTool.Core.GetSurveyAnswerPage
                                Type = part.Type,
                                Answer = part.QuestionPartAnswers.Where(answer => answer.QuestionAnswer.SurveyAnswer.Id == surveyAnswerId).Select(answer => new QuestionPartAnswerDto
                                {
-                                   QuestionPartAnswerId = answer.Id,
+                                   QuestionPartAnswerId = answer.QuestionPart.Id,
                                    Text = answer.Text
                                }).FirstOrDefault()
                            })

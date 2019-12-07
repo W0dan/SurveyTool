@@ -36,7 +36,12 @@
                     {
                         var part = parts[j];
 
-                        <input type="radio" name="@($"Questions[{i}].Answer.Parts[0].SelectedValue")" value="@part.QuestionPartId" /> @part.Text<br />
+                        <input type="radio" name="@($"Questions[{i}].Answer.Parts")" value="@part.QuestionPartId" @(part.Answer.QuestionPartAnswerId == @part.QuestionPartId ? "checked=\"checked\"" : "") /> @part.Text
+                        if (part.Type == SurveyTool.EntityFramework.QuestionPartType.Other)
+                        {
+                            @(": ")@Html.TextBoxFor(m => m.Questions[i].Answer.Text)
+                        }
+                        <br />
                     }
                 </fieldset>
             }
@@ -46,13 +51,21 @@
                 {
                     var part = parts[j];
 
-                    @*<input type="radio" name="@($"Questions[{i}].Answer.Parts[0].SelectedValue")" value="@part.QuestionPartId" /> @part.Text<br />*@
-                    <input type="checkbox" name="@($"Questions[{i}].Answer.Parts[{j}].SelectedValue")" value="@part.QuestionPartId" /> @part.Text<br />
+                    <input type="checkbox" name="@($"Questions[{i}].Answer.Parts")" value="@part.QuestionPartId" @(part.Answer.QuestionPartAnswerId == @part.QuestionPartId ? "checked=\"checked\"" : "") /> @part.Text
+                    if (part.Type == SurveyTool.EntityFramework.QuestionPartType.Other)
+                    {
+                        @(": ")@Html.TextBoxFor(m => m.Questions[i].Answer.Text)
+                    }
+                    <br />
                 }
             }
         </p>
     }
 
-    <input type="submit" />
+    @if (Model.PageNumber > 1)
+    {
+        <input type="submit" name="Previous" value="Vorige pagina" />
+    }
+    <input type="submit" name="Next" value="Volgende pagina" />
 }
 

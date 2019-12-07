@@ -2,6 +2,7 @@
 {
     public enum QuestionPartType
     {
-        SimpleOptions = 1
+        SimpleOptions = 1,
+        Other = 2
     }
 }

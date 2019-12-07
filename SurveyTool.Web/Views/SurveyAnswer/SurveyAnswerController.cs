@@ -41,10 +41,9 @@ namespace SurveyTool.Web.Views.SurveyAnswer
             };
             commandDispatcher.Dispatch(command);
 
-            // load next page
-            var newPageNr = model.PageNumber + 1;
+            // load next or previous page
+            var newPageNr = model.Next != null ? model.PageNumber + 1 : model.PageNumber - 1;
             return RedirectToAction("ShowPage", new { surveyAnswerId = model.Id, pageNr = newPageNr });
-            // return RedirectToRoute("ShowPage", new { id = model.Id, pageNr = newPageNr });
         }
 
         [HttpGet]

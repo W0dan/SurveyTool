@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SurveyTool.Core.SaveSurveyAnswerPage
 {
@@ -6,6 +7,6 @@ namespace SurveyTool.Core.SaveSurveyAnswerPage
     {
         public string Text { get; set; }
 
-        public List<AnswerPart> Parts { get; set; }
+        public List<Guid> Parts { get; set; }
     }
 }
