@@ -6,10 +6,10 @@
 
 <h1>@Model.Survey.Name</h1>
 
-<p class="text-center">
+<div class="alert alert-info">
     @Html.Raw(Model.Survey.Description.Replace("\n", "<br />\n"))
-</p>
+</div>
 
-<form method="post" action="/survey/create/@Model.Survey.Id" class="text-center">
-    <input type="submit" value="Start enquête" />
+<form method="post" action="/survey/answer/create/@Model.Survey.Id" class="text-center">
+    <input type="submit" value="Start enquête" class="btn btn-primary btn-lg" />
 </form>

@@ -8,4 +8,10 @@
     <ProjectReference Include="..\SurveyTool.EntityFramework\SurveyTool.EntityFramework.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="GetSurveyForEdit\" />
+    <Folder Include="CreateSurvey\" />
+    <Folder Include="SaveSurvey\" />
+  </ItemGroup>
+
 </Project>

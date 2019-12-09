@@ -29,8 +29,8 @@ namespace SurveyTool.Web.Views.Survey
         }
 
         [HttpPost]
-        [Route("create/{id:guid}")]
-        public IActionResult CreateSurvey(Guid id)
+        [Route("answer/create/{id:guid}")]
+        public IActionResult CreateSurveyAnswer(Guid id)
         {
             var answerId = commandDispatcher.Dispatch(new CreateSurveyAnswerCommand { SurveyId = id });
 

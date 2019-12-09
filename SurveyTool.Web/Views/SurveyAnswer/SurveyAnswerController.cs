@@ -4,6 +4,7 @@ using SurveyTool.Core.SaveSurveyAnswerPage;
 using SurveyTool.Web.Mediator;
 using SurveyTool.Web.Views.Shared;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SurveyTool.Web.Views.SurveyAnswer
@@ -26,19 +27,46 @@ namespace SurveyTool.Web.Views.SurveyAnswer
         {
             var response = requestDispatcher.Dispatch<GetSurveyAnswerPageRequest, GetSurveyAnswerPageResponse>(new GetSurveyAnswerPageRequest { SurveyAnswerId = id, PageNumber = 1 });
 
-            return View(new SurveyAnswerModel { Title = "Answer Survey", PageNumber = response.Page.PageNumber, Questions = response.Page.Questions.ToList(), Id = id });
+            var model = GetModel(response, id);
+
+            return View(model);
         }
 
         [HttpPost]
-        public IActionResult Next(SurveyAnswerResponseModel model)
+        public IActionResult Next(SurveyAnswerModel model)
         {
-            // save current page
-            SaveSurveyAnswerPageCommand command = new SaveSurveyAnswerPageCommand
+            var response = requestDispatcher.Dispatch<GetSurveyAnswerPageRequest, GetSurveyAnswerPageResponse>(new GetSurveyAnswerPageRequest { SurveyAnswerId = model.Id, PageNumber = model.PageNumber });
+            var dbQuestions = response.Page.Questions.ToList();
+
+            for (int i = 0; i < dbQuestions.Count; i++)
             {
-                Id = model.Id,
-                PageNumber = model.PageNumber,
-                QuestionsWithAnswers = model.Questions
-            };
+                var question = model.Questions[i];
+                if (dbQuestions[i].Type != EntityFramework.QuestionType.Text && (!question.SelectedParts?.Any() ?? true))
+                {
+                    ModelState.AddModelError($"question{i}", $"Gelieve een antwoord te geven op de vraag '{dbQuestions[i].Title}' aub.");
+                }
+            }
+
+            if (!ModelState.IsValid)
+            {
+                var newModel = GetModel(response, model.Id);
+                for (int i = 0; i < model.Questions.Count; i++)
+                {
+                    foreach (var part in newModel.Questions[i].Parts)
+                    {
+                        if (model.Questions[i].SelectedParts?.Contains(part.QuestionPartId) ?? false)
+                            part.QuestionPartAnswerId = part.QuestionPartId;
+                        else
+                            part.QuestionPartAnswerId = null;
+                    }
+                    newModel.Questions[i].Text = model.Questions[i].Text;
+                }
+
+                return View("Index", newModel);
+            }
+
+            // save current page
+            var command = GetCommand(model);
             commandDispatcher.Dispatch(command);
 
             // load next or previous page
@@ -53,9 +81,53 @@ namespace SurveyTool.Web.Views.SurveyAnswer
             var response = requestDispatcher.Dispatch<GetSurveyAnswerPageRequest, GetSurveyAnswerPageResponse>(new GetSurveyAnswerPageRequest { SurveyAnswerId = surveyAnswerId, PageNumber = pageNr });
 
             if (response.Page != null)
-                return View("Index", new SurveyAnswerModel { Title = "Answer Survey", PageNumber = response.Page.PageNumber, Questions = response.Page.Questions.ToList(), Id = surveyAnswerId });
+            {
+                var model = GetModel(response, surveyAnswerId);
+                return View("Index", model);
+            }
             else
+            {
                 return View("LastPage", new ViewModelBase { Title = "Bedankt !" });
+            }
+        }
+
+        private static SurveyAnswerModel GetModel(GetSurveyAnswerPageResponse response, Guid id)
+        {
+            var questions = response.Page.Questions.Select(question => new QuestionWithAnswerModel
+            {
+                QuestionId = question.QuestionId,
+                Title = question.Title,
+                Type = question.Type,
+                Text = question.Answer?.Text,
+                Parts = question.QuestionParts.Select(part => new QuestionPartModel
+                {
+                    QuestionPartId = part.QuestionPartId,
+                    Text = part.Text,
+                    QuestionPartAnswerId = part.Answer.QuestionPartAnswerId,
+                    Type = part.Type
+                }).ToList()
+            }).ToList();
+
+            return new SurveyAnswerModel { Title = "Answer Survey", PageNumber = response.Page.PageNumber, Questions = questions, Id = id };
+        }
+
+        private static SaveSurveyAnswerPageCommand GetCommand(SurveyAnswerModel model)
+        {
+            return new SaveSurveyAnswerPageCommand
+            {
+                Id = model.Id,
+                PageNumber = model.PageNumber,
+                QuestionsWithAnswers = model.Questions.Select(question => new Core.SaveSurveyAnswerPage.QuestionAnswerDto
+                {
+                    QuestionId = question.QuestionId,
+                    Type = question.Type,
+                    Answer = new Core.SaveSurveyAnswerPage.AnswerDto
+                    {
+                        Text = question.Text,
+                        Parts = question.SelectedParts
+                    }
+                }).ToList()
+            };
         }
     }
 }

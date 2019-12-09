@@ -12,60 +12,78 @@
 
 @using (Html.BeginForm("Next", "SurveyAnswer", FormMethod.Post))
 {
-    @Html.HiddenFor(m => m.Id)
-    @Html.HiddenFor(m => m.PageNumber)
+    <div class="form-group">
+        @Html.HiddenFor(m => m.Id)
+        @Html.HiddenFor(m => m.PageNumber)
 
-    @for (var i = 0; i < questions.Count(); i++)
-    {
-        // todo: find generic way to show different kinds of questions
-        var question = questions[i];
-        var parts = questions[i].QuestionParts.ToList();
+        @for (var i = 0; i < questions.Count(); i++)
+        {
+            // todo: find generic way to show different kinds of questions
+            var question = questions[i];
+            var parts = questions[i].Parts;
 
-        <h3>@question.Title</h3>
-
-        <p>
-            @Html.HiddenFor(m => m.Questions[i].QuestionId)
-            @if (question.Type == SurveyTool.EntityFramework.QuestionType.Text)
-            {
-                @Html.TextBoxFor(m => m.Questions[i].Answer.Text)
-            }
-            else if (question.Type == SurveyTool.EntityFramework.QuestionType.MultipleChoiceSingleSelect)
-            {
-                <fieldset>
-                    @for (var j = 0; j < parts.Count(); j++)
+            <div class="card mt-2">
+                <div class="card-header font-weight-bold">
+                    @question.Title
+                </div>
+                <div class="card-body">
+                    @Html.HiddenFor(m => m.Questions[i].QuestionId)
+                    @if (question.Type == SurveyTool.EntityFramework.QuestionType.Text)
                     {
-                        var part = parts[j];
-
-                        <input type="radio" name="@($"Questions[{i}].Answer.Parts")" value="@part.QuestionPartId" @(part.Answer.QuestionPartAnswerId == @part.QuestionPartId ? "checked=\"checked\"" : "") /> @part.Text
-                        if (part.Type == SurveyTool.EntityFramework.QuestionPartType.Other)
+                        @Html.TextBoxFor(m => m.Questions[i].Text, new { @class = "form-control" })
+                    }
+                    else if (question.Type == SurveyTool.EntityFramework.QuestionType.MultipleChoiceSingleSelect)
+                    {
+                        <fieldset>
+                            @for (var j = 0; j < parts.Count(); j++)
+                            {
+                                var part = parts[j];
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="@($"Questions_{i}__Answer_Parts_{j}")" name="@($"Questions[{i}].SelectedParts")" class="custom-control-input" value="@part.QuestionPartId" @(part.QuestionPartAnswerId == part.QuestionPartId ? "checked=\"checked\"" : "") />
+                                    <label class="custom-control-label" for="@($"Questions_{i}__Answer_Parts_{j}")">@part.Text</label>
+                                    @if (part.Type == SurveyTool.EntityFramework.QuestionPartType.Other)
+                                    {
+                                        @(": ")@Html.TextBoxFor(m => m.Questions[i].Text, new { @class = "form-control" })
+                                    }
+                                </div>
+                            }
+                        </fieldset>
+                    }
+                    else if (question.Type == SurveyTool.EntityFramework.QuestionType.MultipleChoiceMultiSelect)
+                    {
+                        @for (var j = 0; j < parts.Count(); j++)
                         {
-                            @(": ")@Html.TextBoxFor(m => m.Questions[i].Answer.Text)
+                            var part = parts[j];
+
+                            <div class="custom-control control-checkbox">
+                                <input type="checkbox" id="@($"Questions_{i}__Answer_Parts_{j}")" name="@($"Questions[{i}].SelectedParts")" class="custom-control-input" value="@part.QuestionPartId" @(part.QuestionPartAnswerId == part.QuestionPartId ? "checked=\"checked\"" : "") />
+                                <label class="custom-control-label" for="@($"Questions_{i}__Answer_Parts_{j}")">@part.Text</label>
+                                @if (part.Type == SurveyTool.EntityFramework.QuestionPartType.Other)
+                                {
+                                    @(": ")@Html.TextBoxFor(m => m.Questions[i].Text, new { @class = "form-control" })
+                                }
+                            </div>
                         }
-                        <br />
                     }
-                </fieldset>
-            }
-            else if (question.Type == SurveyTool.EntityFramework.QuestionType.MultipleChoiceMultiSelect)
-            {
-                @for (var j = 0; j < parts.Count(); j++)
+                </div>
+            </div>
+        }
+
+        <div class="row mt-2">
+            <div class="col-sm-6">
+                @if (Model.PageNumber > 1)
                 {
-                    var part = parts[j];
-
-                    <input type="checkbox" name="@($"Questions[{i}].Answer.Parts")" value="@part.QuestionPartId" @(part.Answer.QuestionPartAnswerId == @part.QuestionPartId ? "checked=\"checked\"" : "") /> @part.Text
-                    if (part.Type == SurveyTool.EntityFramework.QuestionPartType.Other)
-                    {
-                        @(": ")@Html.TextBoxFor(m => m.Questions[i].Answer.Text)
-                    }
-                    <br />
+                    <input type="submit" name="Previous" value="Vorige pagina" class="btn btn-secondary" />
                 }
-            }
-        </p>
-    }
+            </div>
+            <div class="col-sm-6 text-right">
+                <input type="submit" name="Next" value="Volgende pagina" class="btn btn-primary" />
+            </div>
+        </div>
 
-    @if (Model.PageNumber > 1)
-    {
-        <input type="submit" name="Previous" value="Vorige pagina" />
-    }
-    <input type="submit" name="Next" value="Volgende pagina" />
+        <div class="alert alert-danger mt-3" style="@(ViewData.ModelState.IsValid ? "display:none" : "")">
+            @Html.ValidationSummary()
+        </div>
+    </div>
 }
 

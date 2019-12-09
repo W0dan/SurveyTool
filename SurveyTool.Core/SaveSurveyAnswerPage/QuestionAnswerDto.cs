@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SurveyTool.EntityFramework;
+using System;
 
 namespace SurveyTool.Core.SaveSurveyAnswerPage
 {
@@ -6,5 +7,6 @@ namespace SurveyTool.Core.SaveSurveyAnswerPage
     {
         public AnswerDto Answer { get; set; }
         public Guid QuestionId { get; set; }
+        public QuestionType Type { get; set; }
     }
 }

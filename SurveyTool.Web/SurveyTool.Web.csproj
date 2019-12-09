@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="bootstrap" Version="4.4.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -16,6 +17,10 @@
   <ItemGroup>
     <ProjectReference Include="..\SurveyTool.Core\SurveyTool.Core.csproj" />
     <ProjectReference Include="..\SurveyTool.EntityFramework\SurveyTool.EntityFramework.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\AdminEditSurvey\" />
   </ItemGroup>
 
 </Project>

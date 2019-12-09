@@ -1,13 +1,28 @@
 ﻿@model SurveyTool.Web.Views.Home.HomeViewModel
 
 <div class="text-center">
-    <h1 class="display-4">Overview</h1>
+    <h1 class="display-4">Dashboard</h1>
 </div>
-
-<h3>Beschikbare enquêtes</h3>
-<div class="survey-list">
-    @foreach (var s in Model.Surveys)
-    {
-        <div class="survey-list-item"><a href="@Url.Action("index", "survey", new { id=s.Id })">@s.Name</a></div>
-    }
+<div class="card">
+    <div class="card-header font-weight-bold">
+        Beschikbare enquêtes
+    </div>
+    <div class="card-body">
+        <table class="table table-borderless">
+            @foreach (var s in Model.Surveys)
+            {
+                <tr class="border-bottom">
+                    <td style="width:70%">
+                        @s.Name
+                    </td>
+                    <td style="width:15%">
+                        <a href="@Url.Action("index", "survey", new { id=s.Id })">Invullen</a>
+                    </td>
+                    <td style="width:15%">
+                        <a href="@Url.Action("", "", new { id=s.Id })">Beheren</a>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
 </div>
