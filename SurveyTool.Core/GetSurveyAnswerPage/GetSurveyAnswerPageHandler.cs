@@ -31,6 +31,7 @@ namespace SurveyTool.Core.GetSurveyAnswerPage
                            QuestionId = question.Id,
                            Title = question.Title,
                            Type = question.Type,
+                           Mandatory = question.Mandatory,
                            Answer = question.Answers.Where(answer => answer.SurveyAnswer.Id == surveyAnswerId).Select(answer => new QuestionAnswerDto
                            {
                                AnswerId = answer.Id,

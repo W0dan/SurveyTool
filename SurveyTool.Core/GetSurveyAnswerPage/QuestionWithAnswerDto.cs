@@ -12,5 +12,6 @@ namespace SurveyTool.Core.GetSurveyAnswerPage
         public IEnumerable<QuestionPartWithAnswerDto> QuestionParts { get; internal set; }
         public QuestionAnswerDto Answer { get; internal set; }
         public QuestionType Type { get; internal set; }
+        public bool Mandatory { get; internal set; }
     }
 }

@@ -12,5 +12,6 @@ namespace SurveyTool.EntityFramework
         public SurveyPage SurveyPage { get; internal set; }
         public int Order { get; set; }
         public ICollection<QuestionAnswer> Answers { get; internal set; }
+        public bool Mandatory { get; set; }
     }
 }

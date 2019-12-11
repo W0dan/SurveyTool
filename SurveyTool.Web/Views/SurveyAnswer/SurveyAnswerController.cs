@@ -40,8 +40,16 @@ namespace SurveyTool.Web.Views.SurveyAnswer
 
             for (int i = 0; i < dbQuestions.Count; i++)
             {
+                var dbQuestion = dbQuestions[i];
+                if (!dbQuestion.Mandatory)
+                    continue;
+
                 var question = model.Questions[i];
-                if (dbQuestions[i].Type != EntityFramework.QuestionType.Text && (!question.SelectedParts?.Any() ?? true))
+                if (dbQuestion.Type != EntityFramework.QuestionType.Text && (!question.SelectedParts?.Any() ?? true))
+                {
+                    ModelState.AddModelError($"question{i}", $"Gelieve een antwoord te geven op de vraag '{dbQuestions[i].Title}' aub.");
+                }
+                else if (dbQuestion.Type == EntityFramework.QuestionType.Text && string.IsNullOrWhiteSpace(question.Text))
                 {
                     ModelState.AddModelError($"question{i}", $"Gelieve een antwoord te geven op de vraag '{dbQuestions[i].Title}' aub.");
                 }
