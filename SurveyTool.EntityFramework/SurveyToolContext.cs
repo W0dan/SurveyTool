@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace SurveyTool.EntityFramework
 {
-    public class SurveyToolContext : DbContext
+    public class SurveyToolContext : IdentityDbContext
     {
         public SurveyToolContext(DbContextOptions options) : base(options)
         {
@@ -23,6 +24,8 @@ namespace SurveyTool.EntityFramework
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Survey>()
                 .ToTable("Survey")
                 .HasKey(x => x.Id);
